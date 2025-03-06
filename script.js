@@ -21,12 +21,24 @@ main();
 async function main() {
     const canvas = document.querySelector("#gl-canvas");
     const gl = canvas.getContext("webgl");
-    const object3d = await readObjFile("resources/cube.obj")
+    const object3d = await readObjFile("resources/suzanne.obj")
 
     const shaderProgram = await initShaderProgram(gl);
     const buffers = initBuffers(gl, object3d);
 
-    drawScene(gl, shaderProgram, buffers);
+    let cubeRotation = 0.5
+    let then = 0;
+    function render(now) {
+        now *= 0.001; // convert to seconds
+        const deltaTime = now - then;
+        then = now;
+    
+        drawScene(gl, shaderProgram, buffers, cubeRotation, object3d.faces.length * 3);
+        cubeRotation += deltaTime;
+    
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
 }
 
 

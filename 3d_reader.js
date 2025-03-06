@@ -1,8 +1,8 @@
 class Vertex {
     constructor(x, y, z) {
-        this.x
-        this.y 
-        this.z
+        this.x = x
+        this.y = y
+        this.z = z
     }
 
     static fromObjLine(line) {
@@ -38,7 +38,7 @@ class FaceElement {
             line
             .split(" ")
             .slice(1)
-            .map(elements => elements.split("/").map(parseFloat).map(Math.trunc))
+            .map(elements => elements.split("/").map(parseFloat).map(Math.trunc).map(x => x - 1))
             .map(elements => new FaceElement(...elements))
         )
     }
@@ -56,7 +56,7 @@ const _readFaces = lines => lines.map(FaceElement.fromObjLine).filter(x => x != 
 
 
 const readObjFile = async (fileName) => {
-    const file = await fetch("resources/cube.obj")
+    const file = await fetch(fileName)
     const content = await file.text()
 
     const lines = _readLines(content)

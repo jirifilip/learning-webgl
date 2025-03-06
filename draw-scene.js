@@ -1,4 +1,4 @@
-function drawScene(gl, program, buffers) {
+function drawScene(gl, program, buffers, cubeRotation, vertexCount) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
   gl.clearDepth(1.0); // Clear everything
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
@@ -20,8 +20,6 @@ function drawScene(gl, program, buffers) {
   const zFar = 100.0;
   const projectionMatrix = mat4.create();
 
-  // note: glMatrix always has the first argument
-  // as the destination to receive the result.
   mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
   // Set the drawing position to the "identity" point, which is
@@ -33,13 +31,33 @@ function drawScene(gl, program, buffers) {
   mat4.translate(
     modelViewMatrix, // destination matrix
     modelViewMatrix, // matrix to translate
-    [-0.0, 0.0, -6.0],
+    [-0.0, 0.0, -6.0]
   ); // amount to translate
+
+  // mat4.rotate(
+  //   modelViewMatrix, // destination matrix
+  //   modelViewMatrix, // matrix to rotate
+  //   cubeRotation, // amount to rotate in radians
+  //   [0, 0, 1]
+  // ); // axis to rotate around (Z)
+  mat4.rotate(
+    modelViewMatrix, // destination matrix
+    modelViewMatrix, // matrix to rotate
+    cubeRotation * 0.7, // amount to rotate in radians
+    [0, 1, 0]
+  ); // axis to rotate around (Y)
+  // mat4.rotate(
+  //   modelViewMatrix, // destination matrix
+  //   modelViewMatrix, // matrix to rotate
+  //   cubeRotation * 0.3, // amount to rotate in radians
+  //   [1, 0, 0]
+  // ); // axis to rotate around (X)
 
   // Tell WebGL how to pull out the positions from the position
   // buffer into the vertexPosition attribute.
   program.setArrayBufferAttribute("aVertexPosition", buffers.position, 3)
   program.setArrayBufferAttribute("aVertexColor", buffers.color, 4)
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
   // Tell WebGL to use our program when drawing
   program.use()
@@ -47,9 +65,9 @@ function drawScene(gl, program, buffers) {
   program.setUniformMatrix4F("uProjectionMatrix", projectionMatrix)
   program.setUniformMatrix4F("uModelViewMatrix", modelViewMatrix)
 
+  const type = gl.UNSIGNED_SHORT;
   const offset = 0;
-  const vertexCount = 4;
-  gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+  gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
 }
 
 export { drawScene };
