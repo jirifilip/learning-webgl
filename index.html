@@ -1,0 +1,21 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <p id="my-paragraph"></p>
+        
+        <canvas id="gl-canvas" width="640" height="480"></canvas>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+            integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+            crossorigin="anonymous"
+            defer>
+        </script>
+
+        <script id="vertex-shader" type="x-shader/x-vertex" src="vertex-shader.glsl"></script>
+        <script id="fragment-shader" type="x-shader/x-fragment" src="fragment-shader.glsl"></script>
+
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
