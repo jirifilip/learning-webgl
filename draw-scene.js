@@ -1,4 +1,4 @@
-function drawScene(gl, program, buffers, cubeRotation, vertexCount) {
+function drawScene(gl, program, meshes) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
   gl.clearDepth(1.0); // Clear everything
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
@@ -13,32 +13,9 @@ function drawScene(gl, program, buffers, cubeRotation, vertexCount) {
 
   mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
-  const modelViewMatrix = mat4.create();
-  mat4.translate(
-    modelViewMatrix,
-    modelViewMatrix,
-    [-0.0, 0.0, -6.0]
-  );
-
-  mat4.rotate(
-    modelViewMatrix,
-    modelViewMatrix,
-    cubeRotation * 0.7,
-    [0, 1, 0]
-  );
-
-  program.setArrayBufferAttribute("aVertexPosition", buffers.position, 3)
-  program.setArrayBufferAttribute("aVertexColor", buffers.color, 4)
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
-
   program.use()
-
   program.setUniformMatrix4F("uProjectionMatrix", projectionMatrix)
-  program.setUniformMatrix4F("uModelViewMatrix", modelViewMatrix)
-
-  const type = gl.UNSIGNED_SHORT;
-  const offset = 0;
-  gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+  meshes.forEach(mesh => mesh.draw(program))
 }
 
 export { drawScene };
