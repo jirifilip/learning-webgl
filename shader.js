@@ -80,7 +80,7 @@ class ShaderProgram {
         const stride = 0;
         const offset = 0;
         
-        this._context.bindBuffer(this._context.ARRAY_BUFFER, buffer);
+        buffer.use();
         this._context.vertexAttribPointer(
           attributeLocation,
           nComponents,

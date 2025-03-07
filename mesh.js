@@ -1,4 +1,5 @@
 import { readObjFile } from "./3d_reader.js"
+import { Buffer } from "./buffer.js"
 
 
 class Mesh {
@@ -43,7 +44,7 @@ class Mesh {
     draw(shaderProgram) {
         shaderProgram.setArrayBufferAttribute("aVertexPosition", this.vertexBuffer, 3)
         shaderProgram.setArrayBufferAttribute("aVertexColor", this.colorBuffer, 4)
-        this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, this.indexBuffer.getInternalID());
 
         shaderProgram.setUniformMatrix4F("uModelViewMatrix", this.modelViewMatrix)
 
@@ -53,30 +54,18 @@ class Mesh {
     }
 
     _allocateVertexBuffer() {
-        const buffer =  this.context.createBuffer();
-
-        this.context.bindBuffer( this.context.ARRAY_BUFFER, buffer);
-
         const vertices = this.vertices.flatMap(v => [v.x, v.y, v.z])
-
-        this.context.bufferData( this.context.ARRAY_BUFFER, new Float32Array(vertices),  this.context.STATIC_DRAW);
-
-        return buffer;
+        return new Buffer(this.context).allocate(vertices);
     }
 
     _allocateFacesBuffer() {
-        const buffer = this.context.createBuffer();
-        this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, buffer);
-
         const indices = this.faces.flatMap(face => face.map(faceElement => faceElement.vertexIdx))
 
-        this.context.bufferData(
+        return new Buffer(
+            this.context,
             this.context.ELEMENT_ARRAY_BUFFER,
-            new Uint16Array(indices),
-            this.context.STATIC_DRAW,
-        );
-
-        return buffer;
+            Uint16Array,
+        ).allocate(indices);
     }
 
     _allocateColorBuffer() {
@@ -90,12 +79,7 @@ class Mesh {
             .fill(baseColors)
             .reduce((prev, curr) => prev.concat(curr))
 
-        const colorBuffer = this.context.createBuffer();
-
-        this.context.bindBuffer(this.context.ARRAY_BUFFER, colorBuffer);
-        this.context.bufferData(this.context.ARRAY_BUFFER, new Float32Array(colors), this.context.STATIC_DRAW);
-
-        return colorBuffer;
+        return new Buffer(this.context).allocate(colors);
     }
 
     static async fromObjFile(fileName, context) {
