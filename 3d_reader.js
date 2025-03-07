@@ -23,7 +23,7 @@ class Vertex {
 
 
 class FaceElement {
-    constructor(vertexIdx, textureIdx, normalIdx) {
+    constructor(vertexIdx, textureIdx = null, normalIdx = null) {
         this.vertexIdx = vertexIdx
         this.textureIdx = textureIdx
         this.normalIdx = normalIdx

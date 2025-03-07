@@ -1,6 +1,7 @@
 import { drawScene } from "./draw-scene.js";
 import { Shader, ShaderProgram, loadShaderScript } from "./shader.js"
 import { Mesh } from "./mesh.js"
+import { createCustomRectangleMesh } from "./playground.js";
 
 
 async function initShaderProgram(gl) {
@@ -22,6 +23,7 @@ document.addEventListener("keydown", (event) => {
 })
 
 
+
 async function main() {
     const canvas = document.querySelector("#gl-canvas");
     const gl = canvas.getContext("webgl");
@@ -29,10 +31,14 @@ async function main() {
     const shaderProgram = await initShaderProgram(gl);
 
     const monkeyMesh = await Mesh.fromObjFile("resources/suzanne.obj", gl)
+    const customMesh = createCustomRectangleMesh(gl)
+    console.log(customMesh)
+
     const meshes = [
         monkeyMesh.bufferCopy().translate(-2, 1, -10),
         monkeyMesh.bufferCopy().translate(0, 0, -6),
         (await Mesh.fromObjFile("resources/cube.obj", gl)).translate(2, 0, -10),
+        customMesh.translate(0, 0, -6)
     ]
 
     let then = 0;
@@ -41,7 +47,7 @@ async function main() {
         const deltaTime = now - then;
         then = now;
         
-        meshes.forEach(mesh => mesh.rotateY(0.01))
+        meshes.slice(0, 3).forEach(mesh => mesh.rotateY(0.01))
         drawScene(gl, shaderProgram, meshes);
     
         requestAnimationFrame(render);
