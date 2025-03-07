@@ -10,11 +10,13 @@ function drawScene(gl, program, meshes) {
   const zNear = 0.1;
   const zFar = 100.0;
   const projectionMatrix = mat4.create();
-
   mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+
+  const viewMatrix = mat4.create()
 
   program.use()
   program.setUniformMatrix4F("uProjectionMatrix", projectionMatrix)
+  program.setUniformMatrix4F("uViewMatrix", viewMatrix)
   meshes.forEach(mesh => mesh.draw(program))
 }
 

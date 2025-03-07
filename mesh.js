@@ -13,7 +13,7 @@ class Mesh {
         this.vertexBuffer = vertexBuffer || this._allocateVertexBuffer()
         this.colorBuffer = colorBuffer || this._allocateColorBuffer()
 
-        this.modelViewMatrix = mat4.create()
+        this.modelMatrix = mat4.create()
     }
 
     bufferCopy() {
@@ -22,8 +22,8 @@ class Mesh {
 
     translate(x, y, z) {
         mat4.translate(
-            this.modelViewMatrix,
-            this.modelViewMatrix,
+            this.modelMatrix,
+            this.modelMatrix,
             [x, y, z]
         )
         
@@ -50,8 +50,8 @@ class Mesh {
         const axisVector = new Array(3).fill(0).map((x, i) => i == axisIndex ? 1 : 0)
 
         mat4.rotate(
-            this.modelViewMatrix,
-            this.modelViewMatrix,
+            this.modelMatrix,
+            this.modelMatrix,
             howMuch,
             axisVector
         );
@@ -60,7 +60,7 @@ class Mesh {
     draw(shaderProgram) {
         shaderProgram.setArrayBufferAttribute("aVertexPosition", this.vertexBuffer, 3)
         shaderProgram.setArrayBufferAttribute("aVertexColor", this.colorBuffer, 4)
-        shaderProgram.setUniformMatrix4F("uModelViewMatrix", this.modelViewMatrix)
+        shaderProgram.setUniformMatrix4F("uModelMatrix", this.modelMatrix)
 
         this.indexBuffer.use()
         const type = this.context.UNSIGNED_SHORT;
