@@ -30,15 +30,31 @@ class Mesh {
         return this
     }
 
+    rotateX(rotation) {
+        this._rotate("x", rotation)
+        return this
+    }
+
     rotateY(rotation) {
+        this._rotate("y", rotation)
+        return this
+    }
+
+    rotateZ(rotation) {
+        this._rotate("z", rotation)
+        return this
+    }
+
+    _rotate(axisName, howMuch) {
+        const axisIndex = "xyz".indexOf(axisName.toLowerCase())
+        const axisVector = new Array(3).fill(0).map((x, i) => i == axisIndex ? 1 : 0)
+
         mat4.rotate(
             this.modelViewMatrix,
             this.modelViewMatrix,
-            rotation,
-            [0, 1, 0]
+            howMuch,
+            axisVector
         );
-
-        return this
     }
 
     draw(shaderProgram) {
