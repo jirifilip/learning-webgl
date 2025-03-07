@@ -44,11 +44,9 @@ class Mesh {
     draw(shaderProgram) {
         shaderProgram.setArrayBufferAttribute("aVertexPosition", this.vertexBuffer, 3)
         shaderProgram.setArrayBufferAttribute("aVertexColor", this.colorBuffer, 4)
-
-        this.indexBuffer.use()
-
         shaderProgram.setUniformMatrix4F("uModelViewMatrix", this.modelViewMatrix)
 
+        this.indexBuffer.use()
         const type = this.context.UNSIGNED_SHORT;
         const offset = 0;
         this.context.drawElements(this.context.TRIANGLES, this.vertexCount, type, offset);
