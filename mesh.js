@@ -44,7 +44,8 @@ class Mesh {
     draw(shaderProgram) {
         shaderProgram.setArrayBufferAttribute("aVertexPosition", this.vertexBuffer, 3)
         shaderProgram.setArrayBufferAttribute("aVertexColor", this.colorBuffer, 4)
-        this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, this.indexBuffer.getInternalID());
+
+        this.indexBuffer.use()
 
         shaderProgram.setUniformMatrix4F("uModelViewMatrix", this.modelViewMatrix)
 
