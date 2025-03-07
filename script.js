@@ -19,14 +19,21 @@ document.getElementById("my-paragraph").innerText = "Hello world"
 main();
 
 
+document.addEventListener("keydown", (event) => {
+    console.log(event)
+})
+
+
 async function main() {
     const canvas = document.querySelector("#gl-canvas");
     const gl = canvas.getContext("webgl");
 
     const shaderProgram = await initShaderProgram(gl);
+
+    const monkeyMesh = await Mesh.fromObjFile("resources/suzanne.obj", gl)
     const meshes = [
-        (await Mesh.fromObjFile("resources/suzanne.obj", gl)).translate(-2, 1, -10),
-        (await Mesh.fromObjFile("resources/suzanne.obj", gl)).translate(0, 0, -6),
+        monkeyMesh.bufferCopy().translate(-2, 1, -10),
+        monkeyMesh.bufferCopy().translate(0, 0, -6),
         (await Mesh.fromObjFile("resources/cube.obj", gl)).translate(2, 0, -10),
     ]
 

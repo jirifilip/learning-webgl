@@ -2,17 +2,21 @@ import { readObjFile } from "./3d_reader.js"
 
 
 class Mesh {
-    constructor(vertices, faces, context) {
+    constructor(vertices, faces, context, indexBuffer = null, vertexBuffer = null, colorBuffer = null) {
         this.vertices = vertices
         this.vertexCount = faces.length * 3
         this.faces = faces
         this.context = context
 
-        this.indexBuffer = this._allocateFacesBuffer()
-        this.vertexBuffer = this._allocateVertexBuffer()
-        this.colorBuffer = this._allocateColorBuffer()
+        this.indexBuffer = indexBuffer || this._allocateFacesBuffer()
+        this.vertexBuffer = vertexBuffer || this._allocateVertexBuffer()
+        this.colorBuffer = colorBuffer || this._allocateColorBuffer()
 
         this.modelViewMatrix = mat4.create()
+    }
+
+    bufferCopy() {
+        return new Mesh(this.vertices, this.faces, this.context, this.indexBuffer, this.vertexBuffer, this.colorBuffer)
     }
 
     translate(x, y, z) {
