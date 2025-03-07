@@ -1,7 +1,5 @@
-import { initBuffers } from "./init-buffers.js";
 import { drawScene } from "./draw-scene.js";
 import { Shader, ShaderProgram, loadShaderScript } from "./shader.js"
-import { readObjFile } from "./3d_reader.js"
 import { Mesh } from "./mesh.js"
 
 
