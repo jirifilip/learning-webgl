@@ -37,7 +37,6 @@ async function main() {
         (await Mesh.fromObjFile("resources/cube.obj", gl)).translate(2, 0, -10),
     ]
 
-    let cubeRotation = 0.5
     let then = 0;
     function render(now) {
         now *= 0.001; // convert to seconds
