@@ -38,7 +38,7 @@ async function main() {
         monkeyMesh.bufferCopy().translate(-2, 1, -10),
         monkeyMesh.bufferCopy().translate(0, 0, -6),
         (await Mesh.fromObjFile("resources/cube.obj", gl)).translate(2, 0, -10),
-        customMesh.translate(0, 0, -6)
+        customMesh.translate(0, 0, -4)
     ]
 
     let then = 0;
