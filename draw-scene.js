@@ -1,4 +1,4 @@
-function drawScene(gl, program, meshes) {
+function drawScene(gl, program, meshes, viewMatrix) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
   gl.clearDepth(1.0); // Clear everything
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
@@ -11,8 +11,6 @@ function drawScene(gl, program, meshes) {
   const zFar = 100.0;
   const projectionMatrix = mat4.create();
   mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-
-  const viewMatrix = mat4.create()
 
   program.use()
   program.setUniformMatrix4F("uProjectionMatrix", projectionMatrix)
