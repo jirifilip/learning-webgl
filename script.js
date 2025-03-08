@@ -18,6 +18,7 @@ document.getElementById("my-paragraph").innerText = "Hello world"
 main();
 
 let yaw = -90
+let yawChange = 0
 
 const convertToRadians = degrees => degrees * (Math.PI / 180)
 
@@ -32,7 +33,7 @@ const calculateDirectionVector = yaw => {
 }
 
 let position = vec3.create()
-let xzMovement = {x: 0, z: 0} 
+let xzMovement = {right: 0, z: 0} 
 document.addEventListener("keydown", (event) => {
     if (event.key == "w") {
         xzMovement.z = -1
@@ -42,19 +43,19 @@ document.addEventListener("keydown", (event) => {
     }
 
     if (event.key == "e") {
-        yaw += 0.5;
+        yawChange = 1;
     }
     if (event.key == "q") {
-        yaw += -0.5;
+        yawChange = -1;
     }
 
 
 
     if (event.key == "a") {
-        xzMovement.x = -1
+        xzMovement.right = -1
     } 
     else if (event.key == "d") {
-        xzMovement.x = 1
+        xzMovement.right = 1
     }
 })
 
@@ -66,11 +67,18 @@ document.addEventListener("keyup", (event) => {
         xzMovement.z = 0
     }
 
+    if (event.key == "e") {
+        yawChange = 0
+    } 
+    else if (event.key == "q") {
+        yawChange = 0
+    }
+
     if (event.key == "a") {
-        xzMovement.x = 0
+        xzMovement.right = 0
     } 
     else if (event.key == "d") {
-        xzMovement.x = 0
+        xzMovement.right = 0
     }
 })
 
@@ -104,12 +112,12 @@ async function main() {
         const deltaTime = now - then;
         then = now;
 
-        
+        yaw += yawChange * deltaTime * speed * 10
+        const direction = calculateDirectionVector(yaw)
 
-        position[0] += xzMovement.x * deltaTime * speed
+        position[0] += xzMovement.right * deltaTime * speed
         position[2] += xzMovement.z * deltaTime * speed
 
-        const direction = calculateDirectionVector(yaw)
         vec3.add(direction, position, direction)
 
         const viewMatrix = mat4.create()
