@@ -17,21 +17,44 @@ document.getElementById("my-paragraph").innerText = "Hello world"
 
 main();
 
+let yaw = -90
 
+const convertToRadians = degrees => degrees * (Math.PI / 180)
+
+const calculateDirectionVector = yaw => {
+    const radians = convertToRadians(yaw)
+    
+    return vec3.fromValues(
+        Math.cos(radians),
+        0,
+        Math.sin(radians)
+    )
+}
+
+let position = vec3.create()
 let xzMovement = {x: 0, z: 0} 
 document.addEventListener("keydown", (event) => {
     if (event.key == "w") {
-        xzMovement.z = 1
+        xzMovement.z = -1
     } 
     else if (event.key == "s") {
-        xzMovement.z = -1
+        xzMovement.z = 1
     }
 
+    if (event.key == "e") {
+        yaw += 0.5;
+    }
+    if (event.key == "q") {
+        yaw += -0.5;
+    }
+
+
+
     if (event.key == "a") {
-        xzMovement.x = 1
+        xzMovement.x = -1
     } 
     else if (event.key == "d") {
-        xzMovement.x = -1
+        xzMovement.x = 1
     }
 })
 
@@ -70,7 +93,9 @@ async function main() {
         cubeMesh,
     ]
 
-    const viewMatrix = mat4.create()
+    // const viewMatrix = mat4.create()
+    console.log(calculateDirectionVector(yaw))
+
     const speed = 5
 
     let then = 0;
@@ -79,11 +104,29 @@ async function main() {
         const deltaTime = now - then;
         then = now;
 
-        mat4.translate(
-            viewMatrix, 
+        
+
+        position[0] += xzMovement.x * deltaTime * speed
+        position[2] += xzMovement.z * deltaTime * speed
+
+        const direction = calculateDirectionVector(yaw)
+        vec3.add(direction, position, direction)
+
+        const viewMatrix = mat4.create()
+        mat4.lookAt(
             viewMatrix,
-            [xzMovement.x * deltaTime * speed, 0, xzMovement.z * deltaTime * speed]
+            position,
+            direction,
+            [0, 1, 0]
         )
+
+        // mat4.translate(
+        //     viewMatrix, 
+        //     viewMatrix,
+        //     [xzMovement.x * deltaTime * speed, 0, xzMovement.z * deltaTime * speed]
+        // )
+
+        // mat4.multiply(viewMatrix, lookingAtMatrix, viewMatrix)
         
         meshes.forEach(mesh => mesh.rotateY(0.01).rotateX(0.01).rotateZ(0.01))
         drawScene(gl, shaderProgram, meshes, viewMatrix);
