@@ -2,6 +2,7 @@ import { drawScene } from "./draw-scene.js";
 import { Shader, ShaderProgram, loadShaderScript } from "./shader.js"
 import { Mesh } from "./mesh.js"
 import { createCustomRectangleMesh, createCustomCubeMesh } from "./playground.js";
+import { Camera } from "./camera.js"
 
 
 async function initShaderProgram(gl) {
@@ -32,6 +33,8 @@ const calculateDirectionVector = yaw => {
     )
 }
 
+let camera = new Camera()
+
 let position = vec3.create()
 let xzMovement = {right: 0, z: 0} 
 document.addEventListener("keydown", (event) => {
@@ -52,10 +55,10 @@ document.addEventListener("keydown", (event) => {
 
 
     if (event.key == "a") {
-        xzMovement.right = -1
+        camera.moveLeft(deltaTime)
     } 
     else if (event.key == "d") {
-        xzMovement.right = 1
+        camera.moveRight(deltaTime)
     }
 })
 
@@ -83,6 +86,10 @@ document.addEventListener("keyup", (event) => {
 })
 
 
+let then = 0
+let deltaTime = 0
+
+
 
 
 async function main() {
@@ -106,27 +113,28 @@ async function main() {
 
     const speed = 5
 
-    let then = 0;
     function render(now) {
         now *= 0.001; // convert to seconds
-        const deltaTime = now - then;
+        deltaTime = now - then;
         then = now;
 
         yaw += yawChange * deltaTime * speed * 10
         const direction = calculateDirectionVector(yaw)
 
-        position[0] += xzMovement.right * deltaTime * speed
-        position[2] += xzMovement.z * deltaTime * speed
+        // position[0] += xzMovement.right * deltaTime * speed
+        // position[2] += xzMovement.z * deltaTime * speed
 
-        vec3.add(direction, position, direction)
+        // vec3.add(direction, position, direction)
 
-        const viewMatrix = mat4.create()
-        mat4.lookAt(
-            viewMatrix,
-            position,
-            direction,
-            [0, 1, 0]
-        )
+        // const viewMatrix = mat4.create()
+        // mat4.lookAt(
+        //     viewMatrix,
+        //     position,
+        //     direction,
+        //     [0, 1, 0]
+        // )
+
+        const viewMatrix = camera.lookThrough()
 
         // mat4.translate(
         //     viewMatrix, 
